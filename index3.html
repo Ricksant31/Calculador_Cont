@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Funções Extras</title>
+  <style>
+    body {
+      background-color: #f0f8ff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 700px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+    button {
+      padding: 10px 15px;
+      margin-bottom: 20px;
+      background-color: #005baa;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    .resultado {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h2>Funções Extras para Contador</h2>
+
+    <h3>1. Cálculo de INSS (autônomo)</h3>
+    <input type="number" id="salarioINSS" placeholder="Digite o salário (R$)">
+    <button onclick="calcularINSS()">Calcular INSS</button>
+    <div id="resINSS" class="resultado"></div>
+
+    <h3>2. Simulador IRPF Simplificado</h3>
+    <input type="number" id="salarioIR" placeholder="Digite o salário anual (R$)">
+    <button onclick="calcularIR()">Calcular IR</button>
+    <div id="resIR" class="resultado"></div>
+
+    <h3>3. Folha de Pagamento (Simplificada)</h3>
+    <input type="number" id="salarioBruto" placeholder="Salário Bruto (R$)">
+    <button onclick="folhaPagamento()">Simular Folha</button>
+    <div id="resFolha" class="resultado"></div>
+
+    <a href="index.html">⬅ Voltar ao início</a>
+  </section>
+
+  <script>
+    function calcularINSS() {
+      const salario = parseFloat(document.getElementById('salarioINSS').value);
+      let inss = 0;
+      if (salario <= 1412) inss = salario * 0.075;
+      else if (salario <= 2666.68) inss = salario * 0.09;
+      else if (salario <= 4000.03) inss = salario * 0.12;
+      else inss = salario * 0.14;
+
+      document.getElementById('resINSS').innerText = `INSS: R$ ${inss.toFixed(2)}`;
+    }
+
+    function calcularIR() {
+      const salario = parseFloat(document.getElementById('salarioIR').value);
+      let ir = 0;
+      if (salario <= 22847.76) ir = 0;
+      else if (salario <= 33919.80) ir = salario * 0.075 - 1713.58;
+      else if (salario <= 45012.60) ir = salario * 0.15 - 4257.57;
+      else if (salario <= 55976.16) ir = salario * 0.225 - 7633.51;
+      else ir = salario * 0.275 - 10432.32;
+
+      ir = ir < 0 ? 0 : ir;
+      document.getElementById('resIR').innerText = `IRPF Anual: R$ ${ir.toFixed(2)}`;
+    }
+
+    function folhaPagamento() {
+      const bruto = parseFloat(document.getElementById('salarioBruto').value);
+      const inss = bruto * 0.11;
+      const ir = bruto > 3000 ? bruto * 0.075 : 0;
+      const liquido = bruto - inss - ir;
+
+      document.getElementById('resFolha').innerText = `Salário Líquido: R$ ${liquido.toFixed(2)} (INSS: R$${inss.toFixed(2)}, IR: R$${ir.toFixed(2)})`;
+    }
+  </script>
+</body>
+</html>

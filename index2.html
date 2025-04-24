@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Resultados - Calculador Contábil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+    }
+    section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    li {
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Resumo dos Clientes</h1>
+  </header>
+  <section>
+    <ul id="listaClientes"></ul>
+  </section>
+  <script>
+    const lista = document.getElementById('listaClientes');
+    for (let i = 0; i < localStorage.length; i++) {
+      const cliente = localStorage.key(i);
+      const dados = JSON.parse(localStorage.getItem(cliente));
+      const item = document.createElement('li');
+      item.innerHTML = `<strong>${cliente}</strong>: R$ ${dados.totalImpostos.toFixed(2)} em impostos (PIS: R$${dados.pis.toFixed(2)}, COFINS: R$${dados.cofins.toFixed(2)})`;
+      lista.appendChild(item);
+    }
+  </script>
+</body>
+</html>

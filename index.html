@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculador Contábil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+    header img {
+      max-width: 250px;
+    }
+    nav {
+      background-color: #e3f2fd;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #005baa;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background-color: #005baa;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="calculador_contabil.png" alt="Logo Calculador Contábil" />
+    <h1>Calculador Contábil</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="index2.html">Resumo</a>
+    <a href="index3.html">Funções Extras</a>
+  </nav>
+
+  <main>
+    <section>
+      <h2>Dados do Cliente</h2>
+      <label for="cliente">Nome da Empresa:</label>
+      <input type="text" id="cliente" />
+      <label for="renda">Renda Mensal (R$):</label>
+      <input type="number" id="renda" />
+
+      <button onclick="calcularImpostos()">Calcular</button>
+
+      <div id="resultado"></div>
+    </section>
+  </main>
+
+  <script>
+    const db = {};
+    const senhaSegura = "123senhaSegura";
+
+    function calcularImpostos() {
+      const cliente = document.getElementById("cliente").value;
+      const renda = parseFloat(document.getElementById("renda").value);
+      const senha = prompt("Digite a senha para acessar os dados:");
+      if (senha !== senhaSegura) {
+        alert("Acesso negado.");
+        return;
+      }
+      const pis = renda * 0.0065;
+      const cofins = renda * 0.03;
+      const totalImpostos = pis + cofins;
+      db[cliente] = {
+        renda,
+        pis,
+        cofins,
+        totalImpostos
+      };
+
+      localStorage.setItem(cliente, JSON.stringify(db[cliente]));
+
+      document.getElementById("resultado").innerHTML = `
+        <p><strong>PIS:</strong> R$ ${pis.toFixed(2)}</p>
+        <p><strong>COFINS:</strong> R$ ${cofins.toFixed(2)}</p>
+        <p><strong>Total de Impostos:</strong> R$ ${totalImpostos.toFixed(2)}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
