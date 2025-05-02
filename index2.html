@@ -4,24 +4,113 @@
   <meta charset="UTF-8">
   <title>Resultados - Calculador Contábil</title>
   <style>
+    :root {
+      --bg: #f0f8ff;
+      --text: #000;
+      --card: #fff;
+      --item-bg: #f7faff;
+      --item-border: #005baa;
+      --btn: #005baa;
+      --btn-hover: #003d80;
+      --danger: #ff4d4d;
+      --danger-hover: #cc0000;
+    }
+
+    body.dark {
+      --bg: #121212;
+      --text: #eee;
+      --card: #1e1e1e;
+      --item-bg: #2c2c2c;
+      --item-border: #1a73e8;
+      --btn: #1a73e8;
+      --btn-hover: #1558b0;
+      --danger: #d32f2f;
+      --danger-hover: #9a0007;
+    }
+
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f8ff;
-      padding: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0;
     }
+
     header {
       text-align: center;
+      padding: 20px;
     }
+
+    nav {
+      background-color: var(--card);
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: var(--btn);
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    #toggle-dark {
+      float: right;
+      margin-right: 20px;
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: var(--btn);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
     section {
-      background-color: white;
+      background-color: var(--card);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: auto;
+      max-width: 800px;
+      margin: 30px auto;
     }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
     li {
-      margin: 10px 0;
+      margin: 15px 0;
+      padding: 10px;
+      background-color: var(--item-bg);
+      border-left: 5px solid var(--item-border);
+      border-radius: 5px;
+    }
+
+    body.dark input {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #666;
+    }
+
+    button {
+      background-color: var(--danger);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: var(--danger-hover);
     }
   </style>
 </head>
@@ -29,17 +118,63 @@
   <header>
     <h1>Resumo dos Clientes</h1>
   </header>
+
+  <nav>
+    <button id="toggle-dark">🌙</button>
+    <a href="index.html">Início</a>
+    <a href="index2.html">Resumo</a>
+    <a href="index3.html">Funções Extras</a>
+  </nav>
+
   <section>
     <ul id="listaClientes"></ul>
+    <button onclick="limparHistorico()">Limpar Histórico</button>
   </section>
+
   <script>
     const lista = document.getElementById('listaClientes');
-    for (let i = 0; i < localStorage.length; i++) {
-      const cliente = localStorage.key(i);
-      const dados = JSON.parse(localStorage.getItem(cliente));
-      const item = document.createElement('li');
-      item.innerHTML = `<strong>${cliente}</strong>: R$ ${dados.totalImpostos.toFixed(2)} em impostos (PIS: R$${dados.pis.toFixed(2)}, COFINS: R$${dados.cofins.toFixed(2)})`;
-      lista.appendChild(item);
+    const dadosEmpresas = JSON.parse(localStorage.getItem("dadosEmpresas")) || [];
+
+    if (dadosEmpresas.length === 0) {
+      lista.innerHTML = "<li>Nenhum dado encontrado.</li>";
+    } else {
+      dadosEmpresas.forEach(dados => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <p><strong>Empresa:</strong> ${dados.empresa}</p>
+          <p><strong>Mês:</strong> ${dados.mes}</p>
+          <p><strong>PIS:</strong> R$ ${dados.pis.toFixed(2)}</p>
+          <p><strong>COFINS:</strong> R$ ${dados.cofins.toFixed(2)}</p>
+          <p><strong>Juros:</strong> R$ ${dados.juros.toFixed(2)}</p>
+          <p><strong>Total:</strong> R$ ${dados.total.toFixed(2)}</p>
+        `;
+        lista.appendChild(li);
+      });
+    }
+
+    function limparHistorico() {
+      const confirmar = confirm("Tem certeza que deseja apagar todos os dados salvos?");
+      if (confirmar) {
+        localStorage.removeItem("dadosEmpresas");
+        window.location.reload();
+      }
+    }
+
+    // Dark Mode
+    const darkBtn = document.getElementById('toggle-dark');
+    const darkModeAtivado = localStorage.getItem("darkMode") === "true";
+    if (darkModeAtivado) {
+      document.body.classList.add('dark');
+      if (darkBtn) darkBtn.innerText = '☀️';
+    }
+
+    if (darkBtn) {
+      darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const darkAtivo = document.body.classList.contains('dark');
+        localStorage.setItem("darkMode", darkAtivo);
+        darkBtn.innerText = darkAtivo ? '☀️' : '🌙';
+      });
     }
   </script>
 </body>

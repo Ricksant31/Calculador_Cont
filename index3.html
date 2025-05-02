@@ -4,93 +4,236 @@
   <meta charset="UTF-8">
   <title>Funções Extras</title>
   <style>
-    body {
-      background-color: #f0f8ff;
-      font-family: Arial, sans-serif;
-      padding: 20px;
+    :root {
+      --bg: #f0f8ff;
+      --text: #000;
+      --card: #fff;
+      --btn: #005baa;
+      --btn-hover: #003d80;
+      --danger: #ff4d4d;
+      --danger-hover: #cc0000;
     }
+
+    body.dark {
+      --bg: #121212;
+      --text: #eee;
+      --card: #1e1e1e;
+      --btn: #1a73e8;
+      --btn-hover: #1558b0;
+      --danger: #d32f2f;
+      --danger-hover: #9a0007;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    nav {
+      background-color: #e3f2fd;
+      padding: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    body.dark nav {
+      background-color: #1e1e1e;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: var(--btn);
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    #toggle-dark {
+      float: right;
+      margin-right: 20px;
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: var(--btn);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
     section {
-      background: white;
+      background: var(--card);
       padding: 20px;
       border-radius: 8px;
-      max-width: 700px;
-      margin: auto;
+      max-width: 800px;
+      margin: 30px auto;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
+    h2 {
+      text-align: center;
+    }
+
     input {
       width: 100%;
       margin-bottom: 10px;
       padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #fff;
+      color: #000;
     }
+
+    body.dark input {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #666;
+    }
+
     button {
       padding: 10px 15px;
-      margin-bottom: 20px;
-      background-color: #005baa;
+      margin-bottom: 10px;
+      background-color: var(--btn);
       color: white;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
     }
+
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+
     .resultado {
-      margin: 10px 0;
+      margin: 10px 0 20px;
       font-weight: bold;
+      color: var(--btn-hover);
+    }
+
+    .bloco {
+      margin-bottom: 30px;
+    }
+
+    .limpar-btn {
+      background-color: var(--danger);
+    }
+
+    .limpar-btn:hover {
+      background-color: var(--danger-hover);
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <button id="toggle-dark">🌙</button>
+    <a href="index.html">Início</a>
+    <a href="index2.html">Resumo</a>
+    <a href="index3.html">Funções Extras</a>
+  </nav>
+
   <section>
     <h2>Funções Extras para Contador</h2>
 
-    <h3>1. Cálculo de INSS (autônomo)</h3>
-    <input type="number" id="salarioINSS" placeholder="Digite o salário (R$)">
-    <button onclick="calcularINSS()">Calcular INSS</button>
-    <div id="resINSS" class="resultado"></div>
+    <div class="bloco">
+      <h3>1. Cálculo de INSS (Autônomo)</h3>
+      <input type="number" id="salarioINSS" placeholder="Digite o salário (R$)">
+      <button onclick="calcularINSS()">Calcular INSS</button>
+      <div id="resINSS" class="resultado"></div>
+    </div>
 
-    <h3>2. Simulador IRPF Simplificado</h3>
-    <input type="number" id="salarioIR" placeholder="Digite o salário anual (R$)">
-    <button onclick="calcularIR()">Calcular IR</button>
-    <div id="resIR" class="resultado"></div>
+    <div class="bloco">
+      <h3>2. Simulador IRPF Simplificado</h3>
+      <input type="number" id="salarioIR" placeholder="Digite o salário anual (R$)">
+      <button onclick="calcularIR()">Calcular IR</button>
+      <div id="resIR" class="resultado"></div>
+    </div>
 
-    <h3>3. Folha de Pagamento (Simplificada)</h3>
-    <input type="number" id="salarioBruto" placeholder="Salário Bruto (R$)">
-    <button onclick="folhaPagamento()">Simular Folha</button>
-    <div id="resFolha" class="resultado"></div>
+    <div class="bloco">
+      <h3>3. Folha de Pagamento (Simplificada)</h3>
+      <input type="number" id="salarioBruto" placeholder="Salário Bruto (R$)">
+      <button onclick="folhaPagamento()">Simular Folha</button>
+      <div id="resFolha" class="resultado"></div>
+    </div>
 
-    <a href="index.html">⬅ Voltar ao início</a>
+    <button class="limpar-btn" onclick="limparTudo()">Limpar Tudo</button>
   </section>
 
   <script>
     function calcularINSS() {
       const salario = parseFloat(document.getElementById('salarioINSS').value);
       let inss = 0;
-      if (salario <= 1412) inss = salario * 0.075;
-      else if (salario <= 2666.68) inss = salario * 0.09;
-      else if (salario <= 4000.03) inss = salario * 0.12;
-      else inss = salario * 0.14;
+      if (!isNaN(salario)) {
+        if (salario <= 1412) inss = salario * 0.075;
+        else if (salario <= 2666.68) inss = salario * 0.09;
+        else if (salario <= 4000.03) inss = salario * 0.12;
+        else inss = salario * 0.14;
 
-      document.getElementById('resINSS').innerText = `INSS: R$ ${inss.toFixed(2)}`;
+        document.getElementById('resINSS').innerText = `INSS: R$ ${inss.toFixed(2)}`;
+      }
+      document.getElementById('salarioINSS').value = '';
     }
 
     function calcularIR() {
       const salario = parseFloat(document.getElementById('salarioIR').value);
       let ir = 0;
-      if (salario <= 22847.76) ir = 0;
-      else if (salario <= 33919.80) ir = salario * 0.075 - 1713.58;
-      else if (salario <= 45012.60) ir = salario * 0.15 - 4257.57;
-      else if (salario <= 55976.16) ir = salario * 0.225 - 7633.51;
-      else ir = salario * 0.275 - 10432.32;
+      if (!isNaN(salario)) {
+        if (salario <= 22847.76) ir = 0;
+        else if (salario <= 33919.80) ir = salario * 0.075 - 1713.58;
+        else if (salario <= 45012.60) ir = salario * 0.15 - 4257.57;
+        else if (salario <= 55976.16) ir = salario * 0.225 - 7633.51;
+        else ir = salario * 0.275 - 10432.32;
 
-      ir = ir < 0 ? 0 : ir;
-      document.getElementById('resIR').innerText = `IRPF Anual: R$ ${ir.toFixed(2)}`;
+        ir = ir < 0 ? 0 : ir;
+        document.getElementById('resIR').innerText = `IRPF Anual: R$ ${ir.toFixed(2)}`;
+      }
+      document.getElementById('salarioIR').value = '';
     }
 
     function folhaPagamento() {
       const bruto = parseFloat(document.getElementById('salarioBruto').value);
-      const inss = bruto * 0.11;
-      const ir = bruto > 3000 ? bruto * 0.075 : 0;
-      const liquido = bruto - inss - ir;
+      if (!isNaN(bruto)) {
+        const inss = bruto * 0.11;
+        const ir = bruto > 3000 ? bruto * 0.075 : 0;
+        const liquido = bruto - inss - ir;
 
-      document.getElementById('resFolha').innerText = `Salário Líquido: R$ ${liquido.toFixed(2)} (INSS: R$${inss.toFixed(2)}, IR: R$${ir.toFixed(2)})`;
+        document.getElementById('resFolha').innerText = `Salário Líquido: R$ ${liquido.toFixed(2)} (INSS: R$${inss.toFixed(2)}, IR: R$${ir.toFixed(2)})`;
+      }
+      document.getElementById('salarioBruto').value = '';
+    }
+
+    function limparTudo() {
+      document.getElementById('salarioINSS').value = '';
+      document.getElementById('salarioIR').value = '';
+      document.getElementById('salarioBruto').value = '';
+      document.getElementById('resINSS').innerText = '';
+      document.getElementById('resIR').innerText = '';
+      document.getElementById('resFolha').innerText = '';
+    }
+
+    const darkBtn = document.getElementById('toggle-dark');
+
+    const darkModeAtivado = localStorage.getItem("darkMode") === "true";
+    if (darkModeAtivado) {
+      document.body.classList.add('dark');
+      if (darkBtn) darkBtn.innerText = '☀️';
+    }
+
+    if (darkBtn) {
+      darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const darkAtivo = document.body.classList.contains('dark');
+        localStorage.setItem("darkMode", darkAtivo);
+        darkBtn.innerText = darkAtivo ? '☀️' : '🌙';
+      });
     }
   </script>
+
 </body>
 </html>
